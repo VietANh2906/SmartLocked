@@ -54,5 +54,12 @@
     "detected": "Detected",
     "faces": 1,
     "locker": "Locker 7"
+  },
+  {
+    "time": "2025-11-04 20:35:31",
+    "original_file": "z6841683225985_366ec30a2c24e10a0bf761bea6e42493.jpg",
+    "detected": "Detected",
+    "faces": 1,
+    "locker": "Locker 8"
   }
 ]
