@@ -1,77 +1,97 @@
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify
 from flask_cors import CORS
-import os, datetime, json
+from datetime import datetime
+import os
 
 app = Flask(__name__)
-CORS(app)
-
+CORS(app)  # Cho phép React truy cập
 UPLOAD_FOLDER = "uploads"
-if not os.path.exists(UPLOAD_FOLDER):
-    os.makedirs(UPLOAD_FOLDER)
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-LOG_FILE = "logs.json"
+# 🔐 Danh sách 10 tủ khóa
+lockers = [{"id": i, "name": f"Locker {i}", "status": "closed"} for i in range(1, 11)]
+logs = []
 
-# 10 locker demo
-lockers = [{"id": i+1, "name": f"Locker {i+1}", "status": "open" if i % 2 == 0 else "closed"} for i in range(10)]
 
-# Load logs
-if os.path.exists(LOG_FILE):
-    with open(LOG_FILE, "r", encoding="utf-8") as f:
-        logs = json.load(f)
-else:
-    logs = []
-
-@app.route("/lockers")
+@app.route("/lockers", methods=["GET"])
 def get_lockers():
     return jsonify(lockers)
 
-@app.route("/logs")
+
+@app.route("/logs", methods=["GET"])
 def get_logs():
     return jsonify(logs)
 
+
 @app.route("/upload", methods=["POST"])
 def upload_image():
-    file = request.files.get("file")
-    locker_id = request.form.get("locker")
-    if not file or not locker_id:
-        return jsonify({"error": "Vui lòng chọn locker và file"}), 400
+    if "file" not in request.files:
+        return jsonify({"error": "No file uploaded"}), 400
 
+    file = request.files["file"]
+    locker_id = int(request.form.get("locker", 1))
     filename = file.filename
-    file.save(os.path.join(UPLOAD_FOLDER, filename))
+    save_path = os.path.join(UPLOAD_FOLDER, filename)
+    file.save(save_path)
 
-    locker = next((l for l in lockers if str(l["id"]) == locker_id), None)
-    if locker:
-        locker_name = locker["name"]
-        locker["status"] = "closed"
-    else:
-        locker_name = "Unknown"
+    # ✅ Chỉ mở tủ được chọn — không đóng các tủ khác
+    for l in lockers:
+        if l["id"] == locker_id:
+            l["status"] = "open"
+            break
 
-    log_entry = {
-        "time": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        "original_file": filename,
-        "detected": "Detected",
-        "faces": 1,
-        "locker": locker_name
-    }
-    logs.append(log_entry)
-    with open(LOG_FILE, "w", encoding="utf-8") as f:
-        json.dump(logs, f, ensure_ascii=False, indent=2)
+    # ✅ Ghi log mới
+    logs.insert(
+        0,
+        {
+            "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "file": filename,
+            "result": "Detected",
+            "faces": 1,
+            "locker": f"Locker {locker_id}",
+        },
+    )
 
-    return jsonify({"message": "Upload thành công", "locker": locker_name})
+    return jsonify({
+        "message": f"Tải lên thành công: {filename}",
+        "locker_status": lockers
+    })
+
+
+# ✅ API mới: Đóng riêng từng tủ
+@app.route("/close-locker/<int:locker_id>", methods=["POST"])
+def close_locker(locker_id):
+    found = False
+    for l in lockers:
+        if l["id"] == locker_id:
+            l["status"] = "closed"
+            found = True
+            break
+
+    if not found:
+        return jsonify({"error": "Locker not found"}), 404
+
+    logs.insert(0, {
+        "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "file": "",
+        "result": "Locker closed",
+        "faces": 0,
+        "locker": f"Locker {locker_id}"
+    })
+
+    return jsonify({
+        "message": f"Locker {locker_id} closed successfully",
+        "locker_status": lockers
+    })
+
 
 @app.route("/clear-logs", methods=["DELETE"])
 def clear_logs():
-    global logs
-    logs = []
-    with open(LOG_FILE, "w", encoding="utf-8") as f:
-        json.dump(logs, f)
-    for locker in lockers:
-        locker["status"] = "closed"
-    return jsonify({"message": "Đã xóa logs và đóng tất cả locker"})
+    logs.clear()
+    for l in lockers:
+        l["status"] = "closed"
+    return jsonify({"message": "All logs cleared", "locker_status": lockers})
 
-@app.route("/uploads/<filename>")
-def uploaded_file(filename):
-    return send_from_directory(UPLOAD_FOLDER, filename)
 
 if __name__ == "__main__":
-    app.run(port=5000, debug=True)
+    app.run(debug=True)
