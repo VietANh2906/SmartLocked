@@ -1,4 +1,4 @@
-# Python
+# === Python / Flask ===
 __pycache__/
 *.pyc
 *.pyo
@@ -6,45 +6,31 @@ __pycache__/
 *.db
 *.sqlite3
 
-# Environment
+# Virtual environment
 venv/
-.env
+backend/venv/
 
-# Logs
+# Logs & Databases
 *.log
 logs/
+backend/database/
 database/
 
 # Uploads
 uploads/
-
-# Node / Frontend
-node_modules/
-dist/
-build/
-package-lock.json
-
-# VSCode & system files
-.vscode/
-.DS_Store
-Thumbs.db
-frontend/
-
-# === Backend ===
-backend/venv/
-backend/__pycache__/
 backend/uploads/
-backend/database/
-backend/*.db
-backend/*.log
 
-# === Frontend ===
+# === React / Frontend ===
+frontend/
 frontend/node_modules/
 frontend/dist/
 frontend/build/
-frontend/
+frontend/.env
+frontend/package-lock.json
 
 # === Common ===
 .env
+.vscode/
+.idea/
 .DS_Store
 Thumbs.db
