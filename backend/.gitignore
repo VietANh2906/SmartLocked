@@ -1,5 +1,30 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+
+# Environment
+venv/
+.env
+
+# Logs
+*.log
+logs/
+database/
+
+# Uploads
+uploads/
+
+# Node / Frontend
 node_modules/
 dist/
 build/
-.env
+package-lock.json
+
+# VSCode & system files
+.vscode/
 .DS_Store
+Thumbs.db
