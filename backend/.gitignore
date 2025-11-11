@@ -29,3 +29,22 @@ package-lock.json
 .DS_Store
 Thumbs.db
 frontend/
+
+# === Backend ===
+backend/venv/
+backend/__pycache__/
+backend/uploads/
+backend/database/
+backend/*.db
+backend/*.log
+
+# === Frontend ===
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+frontend/
+
+# === Common ===
+.env
+.DS_Store
+Thumbs.db
