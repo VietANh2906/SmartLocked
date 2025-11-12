@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*.sqlite3
+instance/
+.env
+venv/
+env/
+.vscode/
+
+# Node / React
+frontend/node_modules/
+frontend/build/
+frontend/.vite/
+frontend/dist/
+
+# Logs & cache
+*.log
+*.cache
+*.temp
+*.tmp
+
+# System files
+.DS_Store
+Thumbs.db
+
