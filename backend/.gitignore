@@ -1,0 +1,47 @@
+# ========================
+# Node / React
+# ========================
+node_modules/
+build/
+dist/
+.env
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ========================
+# Python / Flask
+# ========================
+__pycache__/
+*.py[cod]
+*.egg
+*.egg-info/
+*.log
+*.sqlite3
+
+# Virtual environment
+backend/venv/
+venv/
+env/
+
+# ========================
+# Project specific
+# ========================
+frontend/             # frontend repo or folder
+backend/database/     # DB files
+backend/uploads/      # Uploaded files
+*.db                  # any other db files
+*.sqlite              # any SQLite files
+*.json                # optional, if you don't want logs in repo
+
+# IDE / Editor
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# OS files
+.DS_Store
+Thumbs.db
