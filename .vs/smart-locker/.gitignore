@@ -11,8 +11,12 @@ env/
 # Node / React
 frontend/node_modules/
 frontend/build/
-frontend/.vite/
 frontend/dist/
+frontend/.vite/
+
+# VS / IDE
+.vs/
+.idea/
 
 # Logs & cache
 *.log
@@ -23,4 +27,3 @@ frontend/dist/
 # System files
 .DS_Store
 Thumbs.db
-
