@@ -1,5 +1,4 @@
-Flask
-Flask-Cors
-Flask-SQLAlchemy
-face_recognition
-Werkzeug
+fastapi
+uvicorn
+python-multipart
+pydantic
